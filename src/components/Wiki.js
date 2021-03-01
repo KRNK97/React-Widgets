@@ -14,12 +14,12 @@ const Wiki = () => {
       <div className="list-group-item shadow-sm my-1 rounded" key={r.pageid}>
         <div className="d-flex justify-content-between align-items-center">
           <div className="title font-weight-bold h3">{r.title}</div>
-          <button className="btn btn-outline-success">
+          <button className="btn btn-outline-success btn-sm mx-2">
             <a
               href={`https://en.wikipedia.org?curid=${r.pageid}`}
               className="text-decoration-none text-reset"
             >
-              Visit
+              Visit Wiki Page
             </a>
           </button>
         </div>
