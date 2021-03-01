@@ -1,0 +1,15 @@
+.question {
+  cursor: pointer;
+}
+
+.inactive {
+  display: none;
+}
+
+span.title {
+  /* font-size: 1.2rem; */
+}
+
+p.content {
+  /* font-size: 1.2rem; */
+}
