@@ -30,41 +30,49 @@ const Wiki = () => {
     );
   });
 
+  const makeApiCall = () => {
+    axios
+      .get("https://en.wikipedia.org/w/api.php", {
+        params: {
+          action: "query",
+          list: "search",
+          origin: "*",
+          format: "json",
+          srsearch: term,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setResults(res.data.query.search);
+      })
+      .catch((e) => {
+        console.log("error", e);
+      });
+
+    console.log("searching . . ");
+  };
+
   useEffect(() => {
     // only make request if term isnt null
 
     // we will wait for some time to let the user finish typing so that we don't call api with each key press
-    const timerId = setTimeout(() => {
-      if (term) {
-        axios
-          .get("https://en.wikipedia.org/w/api.php", {
-            params: {
-              action: "query",
-              list: "search",
-              origin: "*",
-              format: "json",
-              srsearch: term,
-            },
-          })
-          .then((res) => {
-            console.log(res);
-            setResults(res.data.query.search);
-          })
-          .catch((e) => {
-            console.log("error", e);
-          });
 
-        console.log("searching . . ");
-      }
-    }, 750);
+    // to prevent delay on initial render, we check if currently the results are empty and we have the term. If so we call api without timer, if not then we use timer.
+    if (term && !results.length) {
+      makeApiCall();
+    } else {
+      const timerId = setTimeout(() => {
+        makeApiCall();
+      }, 500);
 
-    // we can return a function from useEffect which will run as a clean up function
-    // it will run just before the component re-renders
-    // so we can use this function to run some code just before re-rendering of the component
-    // so each time we enter new character, we will reset the timer and wait for another 750ms to call the api
-    return () => {
-      clearTimeout(timerId);
-    };
+      // we can return a function from useEffect which will run as a clean up function
+      // it will run just before the component re-renders
+      // so we can use this function to run some code just before re-rendering of the component
+      // so each time we enter new character, we will reset the timer and wait for another 500ms to call the api
+      return () => {
+        clearTimeout(timerId);
+      };
+    }
   }, [term]);
 
   const submitHandler = (e) => {
